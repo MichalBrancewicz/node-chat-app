@@ -4,18 +4,25 @@ socket.on('connect', function () {
     console.log('Connected to server');
 });
 
-socket.on('greetNewjoiner', function (greeting) {
-    console.log(greeting)
-})
-
-socket.on('announceNewjoiner', function(announcement) {
-    console.log(announcement)
+socket.on('disconnect', function () {
+    console.log('Disconnected from server');
 })
 
 socket.on('newMessage', function (newMessageFromServer) {
     console.log(newMessageFromServer)
+    let li = jQuery('<li></li>');
+    li.text(`${newMessageFromServer.from}: ${newMessageFromServer.text}`);
+
+    jQuery('#messages').append(li);
 })
 
-socket.on('disconnect', function () {
-    console.log('Disconnected from server');
-})
+jQuery('#message-form').on('submit', function(e) {
+    e.preventDefault();
+
+    socket.emit('createMessage', {
+        from: 'User',
+        text: jQuery('[name=message]').val()
+    }, function () {
+
+    })
+});
